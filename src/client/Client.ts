@@ -694,21 +694,25 @@ export class EthereumProvider {
     this.host = _host
   }
 
-  async send(method, parameters) {
-    let result: any = await this.IN3Client.send(method.method)
-    console.log(result)
-    return result.result
+  send(method, parameters): Promise<object> {
+    var provider = this;
+    return new Promise(function(resolve, reject) {
+      provider.IN3Client.send(method.method).then((response: any) => {
+        console.log(response)
+        resolve(response.result)
+      })
+    })
   }
 
-  async sendBatch(methods, moduleInstance): Promise<object[]> {
-        let methodCalls = [];
+  sendBatch(methods, moduleInstance): Promise<object[]> {
+    let methodCalls = [];
 
-        methods.forEach(async (method) => {
-            method.beforeExecution(moduleInstance);
-            methodCalls.push(await this.send(method.rpcMethod, method.parameters));
-        });
+    methods.forEach((method) => {
+        method.beforeExecution(moduleInstance);
+        methodCalls.push(this.send(method.rpcMethod, method.parameters));
+    });
 
-        return Promise.all(methodCalls);
+    return Promise.all(methodCalls);
   }
 
   registerEventListeners(): void {
