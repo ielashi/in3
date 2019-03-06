@@ -53,7 +53,7 @@ test-in3:
         - --tracing=on
       alias: parity
   script:
-    -
+    - sh /prepare.sh
     - npm install
     - npm run build
     - npm test
