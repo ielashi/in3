@@ -29,8 +29,7 @@ import { EventEmitter } from 'events'
 import ChainContext from './ChainContext'
 import { adjustConfig } from './configHandler'
 import axios from 'axios'
-
-import { logger } from '../util/Logger'
+import { EthereumProvider } from './provider'
 
 import EthAPI from '../modules/eth/api'
 
@@ -531,7 +530,6 @@ async function handleRequest(request: RPCRequest[], node: IN3NodeConfig, conf: I
     return allResponses
   }
   catch (err) {
-    console.log("Error" + err)
     // log errors
     if (conf.loggerUrl)
       axios.post(conf.loggerUrl, { level: 'error', message: 'error handling request for ' + node.url + ' : ' + err.message + ' (' + err.stack + ') ', meta: request })
@@ -686,61 +684,4 @@ function verifyConfig(conf: Partial<IN3Config>): Partial<IN3Config> {
     conf.chainId = aliases[conf.chainId]
   else throw new Error('the chain ' + conf.chainId + ' can not be resolved')
   return conf
-}
-
-export class EthereumProvider {
-  IN3Client: Client
-  host: string
-
-  constructor(client: Client, _host: string){
-    this.IN3Client = client
-    this.host = _host
-  }
-
-  send(method, parameters): Promise<object> {
-    return this.IN3Client.send(method, parameters)
-  }
-
-  sendBatch(methods, moduleInstance): Promise<object[]> {
-    let methodCalls = [];
-
-    methods.forEach((method) => {
-        method.beforeExecution(moduleInstance);
-        methodCalls.push(this.send(method.rpcMethod, method.parameters));
-    });
-
-    return Promise.all(methodCalls);
-  }
-
-  registerEventListeners(): void {
-    throw new Error("Method not Implemented")
-  }
-
-  subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: any[]): Promise<string> {
-    throw new Error("Method not Implemented")
-  }
-
-  unsubscribe(subscriptionId: string, unsubscribeMethod: string): Promise<boolean>{
-    throw new Error("Method not Implemented")
-  }
-
-  clearSubscriptions(unsubscribeMethod: string): Promise<boolean> {
-    throw new Error("Method not Implemented")
-  }
-
-  on(type: string, callback: () => void): void{
-    throw new Error("Method not Implemented")
-  }
-
-  removeListener(type: string, callback: () => void): void {
-    throw new Error("Method not Implemented")
-  }
-
-  removeAllListeners(type: string): void {
-    throw new Error("Method not Implemented")
-  }
-
-  reset(): void {
-    throw new Error("Method not Implemented")
-  }
 }
