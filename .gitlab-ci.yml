@@ -81,7 +81,7 @@ test-implementation:
     - npm install
     - npm run build
     - npm test
-    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@git.slock.it/chirag-parmar/in3-implementation-tests.git
+    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@git.slock.it/in3/ts/in3-implementation-tests.git
     - cd in3-implementation-tests
     - npm install
     - cd node_modules
