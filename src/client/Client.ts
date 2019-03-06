@@ -30,6 +30,8 @@ import ChainContext from './ChainContext'
 import { adjustConfig } from './configHandler'
 import axios from 'axios'
 
+import { logger } from '../util/Logger'
+
 import EthAPI from '../modules/eth/api'
 
 const defaultConfig = require('./defaultConfig.json')
@@ -390,6 +392,8 @@ async function mergeResults(request: RPCRequest, responses: RPCResponse[], conf:
 async function handleRequest(request: RPCRequest[], node: IN3NodeConfig, conf: IN3Config, transport: Transport, ctx: ChainContext, excludes?: string[], retryCount = 0): Promise<RPCResponse[]> {
   if (!retryCount) retryCount = (conf.maxAttempts || 2) - 1
   // keep the timestamp in order to calc the avgResponseTime
+  logger.debug("Retry Count: " + retryCount.toString() + " for Request: " + JSON.stringify(request))
+
   const start = Date.now()
   // get the existing weights
   const weights = conf.servers[conf.chainId].weights || (conf.servers[conf.chainId].weights = {})
@@ -695,11 +699,17 @@ export class EthereumProvider {
   }
 
   send(method, parameters): Promise<object> {
-    var provider = this;
-    return new Promise(function(resolve, reject) {
-      provider.IN3Client.send(method.method).then((response: any) => {
-        console.log(response)
-        resolve(response.result)
+    console.log(method)
+    const provider = this
+    return new Promise((resolve, reject) => {
+      provider.IN3Client.send(method.method).then((response:  any) => {
+        if(response){
+          logger.debug(JSON.stringify(response))
+          resolve(response.result)
+        }
+        else{
+          reject()
+        }
       })
     })
   }
