@@ -392,7 +392,6 @@ async function mergeResults(request: RPCRequest, responses: RPCResponse[], conf:
 async function handleRequest(request: RPCRequest[], node: IN3NodeConfig, conf: IN3Config, transport: Transport, ctx: ChainContext, excludes?: string[], retryCount = 0): Promise<RPCResponse[]> {
   if (!retryCount) retryCount = (conf.maxAttempts || 2) - 1
   // keep the timestamp in order to calc the avgResponseTime
-  logger.debug("Retry Count: " + retryCount.toString() + " for Request: " + JSON.stringify(request))
 
   const start = Date.now()
   // get the existing weights
@@ -699,19 +698,7 @@ export class EthereumProvider {
   }
 
   send(method, parameters): Promise<object> {
-    console.log(method)
-    const provider = this
-    return new Promise((resolve, reject) => {
-      provider.IN3Client.send(method.method).then((response:  any) => {
-        if(response){
-          logger.debug(JSON.stringify(response))
-          resolve(response.result)
-        }
-        else{
-          reject()
-        }
-      })
-    })
+    return this.IN3Client.send(method, parameters)
   }
 
   sendBatch(methods, moduleInstance): Promise<object[]> {
