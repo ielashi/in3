@@ -624,7 +624,6 @@ export function getNodes(config: IN3Config, count: number, transport: Transport,
 
   if (nodes.length === 0) {
 
-    console.log("nodes length=0")
     const blackListed = Object.keys(chain.weights).filter(_ => (!excludes || excludes.indexOf(_) === -1) && chain.weights[_].blacklistedUntil > now)
 
     // if more than 50% of the available nodes are currently blacklisted, we might want to clean up our blacklist
