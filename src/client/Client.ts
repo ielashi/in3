@@ -610,17 +610,21 @@ export function getNodes(config: IN3Config, count: number, transport: Transport,
   // get the current chain-configuration, which was previously updated
   const chain = config.servers[config.chainId]
 
+
   // filter-function for the nodeList
   const filter = (n: IN3NodeConfig) =>
     n.deposit >= config.minDeposit &&  // check deposit
-      (!excludes || excludes.indexOf(n.address) === -1) && // check excluded addresses (because of recursive calls)
-      (!chain.weights || ((chain.weights[n.address] || {}).blacklistedUntil || 0) < now) &&
-      n.timeout ? (n.timeout <= config.depositTimeout) : (3600 <= config.depositTimeout)// check for deposit timeout
+    (!excludes || excludes.indexOf(n.address) === -1) && // check excluded addresses (because of recursive calls)
+    (!chain.weights || ((chain.weights[n.address] || {}).blacklistedUntil || 0) < now)
+    && (n.timeout ? (n.timeout >= config.depositTimeout) : (3600 >= config.depositTimeout))// check for deposit timeout
 
   // prefilter for minDeposit && excludes && blacklisted
   let nodes = chain.nodeList.filter(filter) // check blacklist
 
+
   if (nodes.length === 0) {
+
+    console.log("nodes length=0")
     const blackListed = Object.keys(chain.weights).filter(_ => (!excludes || excludes.indexOf(_) === -1) && chain.weights[_].blacklistedUntil > now)
 
     // if more than 50% of the available nodes are currently blacklisted, we might want to clean up our blacklist
