@@ -78,7 +78,8 @@ async function runSingleTest(test: any, c: number) {
         chainId: test.chainId || '0x1',
         autoUpdateList: false,
         maxAttempts: 1,
-        loggerUrl: ''
+        loggerUrl: '',
+        depositTimeout: 3600
     }, {
             handle(url: string, data: RPCRequest | RPCRequest[], timeout?: number): Promise<RPCResponse | RPCResponse[]> {
                 test.response[res].id = (data as any)[0].id
@@ -93,6 +94,7 @@ async function runSingleTest(test: any, c: number) {
                 return r
             }
         })
+
     for (const chainId of Object.keys(client.defConfig.servers))
         client.defConfig.servers[chainId].needsUpdate = false
     if (client.defConfig.chainId === '0x44d')

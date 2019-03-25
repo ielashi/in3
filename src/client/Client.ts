@@ -604,7 +604,7 @@ function getWeight(weight: IN3NodeWeight, node: IN3NodeConfig) {
 /**
  * finds nodes based on the config
  */
-function getNodes(config: IN3Config, count: number, transport: Transport, excludes?: string[]) {
+export function getNodes(config: IN3Config, count: number, transport: Transport, excludes?: string[]) {
 
   const now = Date.now()
   // get the current chain-configuration, which was previously updated
@@ -613,8 +613,9 @@ function getNodes(config: IN3Config, count: number, transport: Transport, exclud
   // filter-function for the nodeList
   const filter = (n: IN3NodeConfig) =>
     n.deposit >= config.minDeposit &&  // check deposit
-    (!excludes || excludes.indexOf(n.address) === -1) && // check excluded addresses (because of recursive calls)
-    (!chain.weights || ((chain.weights[n.address] || {}).blacklistedUntil || 0) < now)
+      (!excludes || excludes.indexOf(n.address) === -1) && // check excluded addresses (because of recursive calls)
+      (!chain.weights || ((chain.weights[n.address] || {}).blacklistedUntil || 0) < now) &&
+      n.timeout ? (n.timeout <= config.depositTimeout) : (3600 <= config.depositTimeout)// check for deposit timeout
 
   // prefilter for minDeposit && excludes && blacklisted
   let nodes = chain.nodeList.filter(filter) // check blacklist
