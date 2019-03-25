@@ -279,6 +279,10 @@ definitions:
                 type: number
                 description: min stake of the server. Only nodes owning at least this amount will be chosen.
                 example: 0
+            depositTimeout: 
+                type: number
+                description: amount of time the deposit is locked after the server unregister himself in seconds
+                exampple: 3600
             replaceLatestBlock:
                 description: if specified, the blocknumber *latest* will be replaced by blockNumber- specified value
                 type: integer

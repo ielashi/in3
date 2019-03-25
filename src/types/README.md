@@ -254,6 +254,7 @@ const iN3Config:types.IN3Config = {
  Must be one of the these values : `'none`', `'standard`', `'full`'
 *  **signatureCount** `number` - number of signatures requested   
 *  **minDeposit** `number` (required)  - min stake of the server. Only nodes owning at least this amount will be chosen.   
+*  **depositTimeout** `number` - amount of time the deposit is locked after the server unregister himself in seconds   
 *  **replaceLatestBlock** `integer` - if specified, the blocknumber *latest* will be replaced by blockNumber- specified value   
 *  **requestCount** `number` (required)  - the number of request send when getting a first answer   
 *  **finality** `number` - the number in percent needed in order reach finality (% of signature of the validators)   
