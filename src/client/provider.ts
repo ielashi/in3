@@ -1,6 +1,6 @@
 import Client from './Client'
 
-export class EthereumProvider {
+export class CustomProvider {
   IN3Client: Client
   host: string
 
@@ -24,35 +24,7 @@ export class EthereumProvider {
     return Promise.all(methodCalls);
   }
 
-  registerEventListeners(): void {
-    throw new Error("Method not Implemented")
-  }
-
-  subscribe(subscribeMethod: string, subscriptionMethod: string, parameters: any[]): Promise<string> {
-    throw new Error("Method not Implemented")
-  }
-
-  unsubscribe(subscriptionId: string, unsubscribeMethod: string): Promise<boolean>{
-    throw new Error("Method not Implemented")
-  }
-
-  clearSubscriptions(unsubscribeMethod: string): Promise<boolean> {
-    throw new Error("Method not Implemented")
-  }
-
-  on(type: string, callback: () => void): void{
-    throw new Error("Method not Implemented")
-  }
-
-  removeListener(type: string, callback: () => void): void {
-    throw new Error("Method not Implemented")
-  }
-
-  removeAllListeners(type: string): void {
-    throw new Error("Method not Implemented")
-  }
-
-  reset(): void {
-    throw new Error("Method not Implemented")
+  supportsSubscriptions(): boolean {
+    return false
   }
 }
