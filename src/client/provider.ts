@@ -1,16 +1,29 @@
 import Client from './Client'
 
-export class CustomProvider {
+export class HttpProvider {
   IN3Client: Client
   host: string
+  connected: boolean
 
-  constructor(client: Client, _host: string){
+  constructor(_host: string, options=  {}, client: Client){
     this.IN3Client = client
     this.host = _host
+    this.connected = true;
   }
 
   send(method, parameters): Promise<object> {
-    return this.IN3Client.send(method, parameters)
+    let request
+
+    if(typeof(method) == "string")
+      request = { method: method, params: parameters }
+    else
+      request = method
+
+    if(typeof parameters == "function")
+      return this.IN3Client.send(request, parameters)
+    else
+      return this.IN3Client.send(request)
+
   }
 
   sendBatch(methods, moduleInstance): Promise<object[]> {
@@ -26,5 +39,9 @@ export class CustomProvider {
 
   supportsSubscriptions(): boolean {
     return false
+  }
+
+  disconnect(): boolean {
+    return true;
   }
 }
